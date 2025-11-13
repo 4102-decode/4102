@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.catscan4102.subsystems;
-
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
 public class TheShooter extends SubsystemBase {
     MotorEx shooterLeft, shooterRight;
     double shooterPower;
-    boolean on;
+    boolean on = false;
     public TheShooter(MotorEx shooterLeft, MotorEx shooterRight){
         this.shooterLeft = shooterLeft;
         this.shooterRight = shooterRight;
@@ -15,6 +14,10 @@ public class TheShooter extends SubsystemBase {
 
     public void setOn(){
         on = !on;
+    }
+
+    public void setPower(double power){
+        shooterPower = power;
     }
 
     public void add(){

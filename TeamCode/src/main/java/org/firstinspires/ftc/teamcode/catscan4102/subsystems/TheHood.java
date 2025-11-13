@@ -22,6 +22,10 @@ public class TheHood extends SubsystemBase {
         hoodPos -= .02;
     }
 
+    public void setPos(double pos){
+        hoodPos = pos;
+    }
+
     @Override
     public void periodic(){
         hoodLeft.setPosition(hoodPos);

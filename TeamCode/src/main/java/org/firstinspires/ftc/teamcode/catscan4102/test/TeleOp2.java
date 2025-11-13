@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.catscan4102;
+package org.firstinspires.ftc.teamcode.catscan4102.test;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
-@TeleOp(name = "goon")
+@TeleOp(name = "interlocking toes")
 public class TeleOp2 extends LinearOpMode {
     DcMotor frontRight, frontLeft, backRight, backLeft, intake;
     Servo sortLeft, sortRight, kickLeft, kickRight, hoodLeft, hoodRight;
@@ -27,14 +27,16 @@ public class TeleOp2 extends LinearOpMode {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backRight = hardwareMap.dcMotor.get("backRight");
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterLeft = new MotorEx(hardwareMap, "shooterLeft");
         shooterRight = new MotorEx(hardwareMap, "shooterRight");
         kickLeft = hardwareMap.get(Servo.class, "kickerLeft");
         kickRight = hardwareMap.get(Servo.class, "kickerRight");
         hoodLeft = hardwareMap.get(Servo.class, "hoodLeft");
         hoodRight = hardwareMap.get(Servo.class, "hoodRight");
+        sortLeft = hardwareMap.get(Servo.class, "sortLeft");
+        sortRight = hardwareMap.get(Servo.class, "sortRight");
         shooterRight.setInverted(true);
         intake = hardwareMap.dcMotor.get("intake");
         intake.setDirection(DcMotor.Direction.REVERSE);
@@ -42,8 +44,8 @@ public class TeleOp2 extends LinearOpMode {
         shooterRight.setRunMode(Motor.RunMode.VelocityControl);
         shooterRight.setVeloCoefficients(0.5, 0.0012, 0.32);
         shooterLeft.setVeloCoefficients(0.5, 0.0012, 0.32);
-        shooterLeft.setFeedforwardCoefficients(0.92, 0.47, 0.3);
         shooterRight.setFeedforwardCoefficients(0.92, 0.47, 0.3);
+        shooterLeft.setFeedforwardCoefficients(0.92, 0.47, 0.3);
         shooterLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
         shooterRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
         Gamepad karel = new Gamepad();
@@ -56,10 +58,7 @@ public class TeleOp2 extends LinearOpMode {
         ll.start();
         aToggle = prevA = false; // default all toggles false
 
-        kickLeft.setPosition(.5);
-        kickRight.setPosition(.5);
-
-        shooterPower = 1.5;
+        shooterPower = 1.1;
         shooterAdj = .05; // the increment that shooter power is adjusted by
         adjWaitTime = .25;
         hoodPos = .2;
@@ -71,10 +70,10 @@ public class TeleOp2 extends LinearOpMode {
             double x = gamepad2.left_stick_x * 1.1;
             double rx = gamepad2.right_stick_x * .85;
             double d = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double fl = Math.pow((y + x + rx) / d, 5);
-            double bl = Math.pow((y - x + rx) / d, 5);
-            double fr = Math.pow((y - x - rx) / d, 5);
-            double br = Math.pow((y + x - rx) / d, 5);
+            double fl = Math.pow((y - x - rx),5) / d;
+            double bl = Math.pow((y + x - rx),5) / d;
+            double fr = Math.pow((y + x + rx),5) / d;
+            double br = Math.pow((y - x + rx),5) / d;
 
             frontLeft.setPower(fl);
             backLeft.setPower(bl);
@@ -111,33 +110,25 @@ public class TeleOp2 extends LinearOpMode {
                 adjTimer.reset();
             }
 
-            /*
-            if (gamepad1.left_bumper){
-                kickLeft.setPosition(.5+(40.0/355));//up
-                kickRight.setPosition(.54);
-            } else if (gamepad1.right_bumper){
-                kickLeft.setPosition(.5);//down
-                kickRight.setPosition(.5-(40.0/355));
-            }
-            */
-
+            //left kicker
             if (karelNow.left_bumper && !karel.left_bumper) {
                 rkUp = !rkUp;
 
                 if (rkUp) {
-                    kickRight.setPosition(.38);
+                    kickRight.setPosition(.52);
                 } else if (!rkUp) {
-                    kickRight.setPosition(.28);
+                    kickRight.setPosition(.35);
                 }
             }
 
+            //right kicker
             if (karelNow.right_bumper && !karel.right_bumper) {
                 lkUp = !lkUp;
 
                 if (lkUp) {
-                    kickLeft.setPosition(.5 + (40.0 / 355));//up
+                    kickLeft.setPosition(.47);//up
                 } else if (!lkUp) {
-                    kickLeft.setPosition(.5); //down
+                    kickLeft.setPosition(.65); //down
                 }
             }
 

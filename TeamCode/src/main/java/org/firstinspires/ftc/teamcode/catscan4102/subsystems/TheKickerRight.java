@@ -5,15 +5,21 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 public class TheKickerRight extends SubsystemBase {
     private Servo kickRight;
+    private boolean up = false;
     public TheKickerRight(Servo kickRight){
         this.kickRight = kickRight;
     }
 
-    public void up(){
-        kickRight.setPosition(.54);
+    public void setUp(){
+        up = !up;
     }
 
-    public void down(){
-        kickRight.setPosition(.5-(40.0/355));
+    @Override
+    public void periodic(){
+        if(up){
+            kickRight.setPosition(.52);
+        } else {
+            kickRight.setPosition(.35);
+        }
     }
 }

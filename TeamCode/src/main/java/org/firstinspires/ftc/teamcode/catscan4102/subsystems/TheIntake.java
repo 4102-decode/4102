@@ -5,15 +5,21 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 public class TheIntake extends SubsystemBase {
     private DcMotorEx intake;
+    boolean on = false;
     public TheIntake(DcMotorEx intake){
         this.intake = intake;
     }
 
-    public void on(){
-        intake.setPower(1);
+    public void setOn(){
+        on = !on;
     }
 
-    public void off(){
-        intake.setPower(0);
+    @Override
+    public void periodic(){
+        if(on){
+            intake.setPower(1);
+        } else {
+            intake.setPower(0);
+        }
     }
 }
